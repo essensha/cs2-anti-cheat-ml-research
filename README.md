@@ -87,4 +87,21 @@ python -m unittest test_baseline.py
 
 Outputs are written to `outputs/metrics.json` and `outputs/predictions.csv`; generated data is written to `data/synthetic_anticheat_telemetry.csv`. Both directories are ignored by Git. Use `--rows` and `--seed` on the generator and `--threshold` on the baseline to explore trade-offs.
 
-**Scope:** this is an offline research baseline, not a streaming system or enforcement model. The original notebooks remain unchanged and may still require local files. The commands above have not yet been independently executed in a clean environment during this update.
+**Scope:** this is an offline research baseline, not a streaming system or enforcement model. The original notebooks remain unchanged and may still require local files. The commands were executed successfully in a separate Python environment with NumPy 2.3.5, pandas 2.2.3, and scikit-learn 1.8.0; both unit tests passed. This verifies the standalone baseline on that environment, not compatibility with every dependency version or operating system.
+
+### Verified standalone run (seed 42, 12,000 rows)
+
+A separate execution generated **9,667 training rows** and **2,333 temporal test rows** (cutoff day 48). Saved console metrics from that execution:
+
+| Metric | Result |
+| --- | ---: |
+| Logistic regression ROC-AUC | 0.999994 |
+| Logistic regression average precision | 0.999900 |
+| Logistic regression Brier score | 0.000647 |
+| Logistic regression precision at threshold 0.70 | 1.0000 |
+| Logistic regression recall at threshold 0.70 | 0.9787 |
+| Isolation Forest ROC-AUC | 0.990523 |
+| Isolation Forest average precision | 0.894990 |
+| Automated tests | 2 passed |
+
+**Interpretation:** The generated label patterns are deliberately strong and highly separable. Near-perfect metrics, and the observed zero false positives across skill groups in this run, **do not establish real-world detection performance or fairness**. This baseline validates code execution and evaluation wiring, not deployment readiness.
