@@ -71,3 +71,20 @@ Typical Python packages used across the notebooks include `pandas`, `numpy`, `sc
 - Proposed streaming, serving, latency SLOs, canary rollout, rollback and production monitoring are architectural considerations, not validated deployments.
 
 **Author:** [Essence Lynn Wilson, PhD](https://github.com/essensha) · Independent research portfolio.
+
+## Clean-checkout reproducible baseline (new)
+
+A standalone, **fully synthetic** experiment is now included alongside the original exploratory notebooks. It generates its own data, applies a chronological train/test split, fits logistic regression and Isolation Forest, and exports metrics plus skill-segment false-positive rates. The generator deliberately uses **new synthetic data**, so its metrics **will not match** the historical notebook outputs above.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\\Scripts\\activate
+pip install -r requirements.txt
+python generate_synthetic_data.py
+python run_baseline.py
+python -m unittest test_baseline.py
+```
+
+Outputs are written to `outputs/metrics.json` and `outputs/predictions.csv`; generated data is written to `data/synthetic_anticheat_telemetry.csv`. Both directories are ignored by Git. Use `--rows` and `--seed` on the generator and `--threshold` on the baseline to explore trade-offs.
+
+**Scope:** this is an offline research baseline, not a streaming system or enforcement model. The original notebooks remain unchanged and may still require local files. The commands above have not yet been independently executed in a clean environment during this update.
